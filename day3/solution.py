@@ -2,17 +2,8 @@ import sys
 from pathlib import Path
 import re
 
-#    y   x
-checks = [
-    (0, +1),
-    (0, -1),
-    (+1, 0),
-    (+1, +1),
-    (+1, -1),
-    (-1, 0),
-    (-1, +1),
-    (-1, -1),
-]
+checks = [n for n in [(y, x) for y in range(-1, 2)
+                      for x in range(-1, 2)] if n != (0, 0)]
 
 
 def get_data(file: str) -> list[str]:
@@ -24,8 +15,8 @@ def get_data(file: str) -> list[str]:
 
 def part1(data: list[str]):
     mod = len(data) + 1
-    matrix = '\n'.join(data)
-    symbols_pattern = re.compile(r'[^\w\.\s]')
+    matrix = '.'.join(data)
+    symbols_pattern = re.compile(r'[^\w\.]')
     idx = 0
     symbols = []
     while True:
@@ -34,9 +25,9 @@ def part1(data: list[str]):
             break
         idx = found.start()
         symbols.append((idx // mod, idx % mod, idx))
-        print(symbols[-1], matrix[idx])
+        # print(symbols[-1], matrix[idx])
 
-    print("*" * 12)
+    # print("*" * 12)
     number_positions = set()
     for symbol in symbols:
         try:
@@ -46,31 +37,21 @@ def part1(data: list[str]):
                 Y = y+_y
                 X = x+_x
                 if data[Y][X].isdecimal():
-                    np = get_position(data, (Y, X))
-                    print(matrix[i], (Y, X), np, data[np[0]][np[1]:np[2]])
+                    np = get_number_position(data, (Y, X))
+                    # print(matrix[i], (Y, X), np, data[np[0]][np[1]:np[2]])
                     number_positions.add(np)
         except Exception as e:
             print(":(", e)
             raise e
 
     numbers = [int(data[y][s:e]) for (y, s, e) in number_positions]
-    print(numbers, sum(numbers))
-
-
-def get_position(data: list[str], core: tuple[int]) -> tuple[int]:
-    y, x = core
-    start = x
-    end = x
-    while start-1 >= 0 and data[y][start-1].isdecimal():
-        start -= 1
-    while end+1 < len(data[y]) and data[y][end+1].isdecimal():
-        end += 1
-    return (y, start, end+1)
+    # print(numbers)
+    print(sum(numbers))
 
 
 def part2(data: list[str]):
     mod = len(data[0]) + 1
-    matrix = '\n'.join(data)
+    matrix = '.'.join(data)
     gears = {}
     for i, c in enumerate(matrix):
         if c == '*':
@@ -80,12 +61,24 @@ def part2(data: list[str]):
                 y = pg[0] + check[0]
                 x = pg[1] + check[1]
                 if data[y][x].isdecimal():
-                    parts.add(get_position(data, (y, x)))
+                    parts.add(get_number_position(data, (y, x)))
             if len(parts) == 2:
                 gears[pg] = product([int(data[y][s:e]) for (y, s, e) in parts])
     # print(gears)
     ratios = gears.values()
-    print(ratios, sum(ratios))
+    # print(ratios)
+    print(sum(ratios))
+
+
+def get_number_position(data: list[str], core: tuple[int]) -> tuple[int]:
+    y, x = core
+    start = x
+    end = x
+    while start-1 >= 0 and data[y][start-1].isdecimal():
+        start -= 1
+    while end+1 < len(data[y]) and data[y][end+1].isdecimal():
+        end += 1
+    return (y, start, end+1)
 
 
 def product(numbers) -> int:
