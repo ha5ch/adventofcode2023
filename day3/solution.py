@@ -79,8 +79,35 @@ def get_position(data: list[str], core: tuple[int]) -> tuple[int]:
     return (y, start, end+1)
 
 def part2(data: list[str]):
-    ...
+    possible_gears = []
+    mod = len(data[0]) + 1
+    matrix = '\n'.join(data)
+    for i, c in enumerate(matrix):
+        if c == '*':
+            pg = (i // mod, i % mod, i)
+            print(pg, matrix[i])
+            possible_gears.append(pg)
+    gears = {}
+    for pg in possible_gears:
+        gears[pg] = set()
+        for check in checks:
+            Y = pg[0] + check[0]
+            X = pg[1] + check[1]
+            if data[Y][X].isdecimal():
+                gears[pg].add(get_position(data, (Y, X)))
+    gears = {gear: gears[gear] for gear in gears if len(gears[gear]) == 2}
+    ratios = [
+        mul([int(data[y][s:e]) for (y, s, e) in list(pos)])
+        for pos in gears.values()
+    ]
+    print(ratios, sum(ratios))
 
+
+def mul(numbers) -> int:
+    res = 1
+    for n in numbers:
+        res *= n
+    return res
 
 if __name__ == '__main__':
     file = 'demo.txt'
