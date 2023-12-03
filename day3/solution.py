@@ -23,10 +23,10 @@ def get_data(file: str) -> list[str]:
 
 
 def part1(data: list[str]):
-    symbols_pattern = re.compile(r'[^\w\.\s]')
-    idx = 0
     mod = len(data) + 1
     matrix = '\n'.join(data)
+    symbols_pattern = re.compile(r'[^\w\.\s]')
+    idx = 0
     symbols = []
     while True:
         found = symbols_pattern.search(matrix, idx+1)
@@ -57,17 +57,6 @@ def part1(data: list[str]):
     print(numbers, sum(numbers))
 
 
-def get_number(data: list[str], pos: tuple[int]) -> int:
-    y, x = pos
-    start = x
-    end = x
-    while start-1 >= 0 and data[y][start-1].isdecimal():
-        start -= 1
-    while end+1 < len(data[y]) and data[y][end+1].isdecimal():
-        end += 1
-    # print(data[y][start:end+1])
-    return int(data[y][start:end+1])
-
 def get_position(data: list[str], core: tuple[int]) -> tuple[int]:
     y, x = core
     start = x
@@ -78,36 +67,33 @@ def get_position(data: list[str], core: tuple[int]) -> tuple[int]:
         end += 1
     return (y, start, end+1)
 
+
 def part2(data: list[str]):
-    possible_gears = []
     mod = len(data[0]) + 1
     matrix = '\n'.join(data)
+    gears = {}
     for i, c in enumerate(matrix):
         if c == '*':
             pg = (i // mod, i % mod, i)
-            print(pg, matrix[i])
-            possible_gears.append(pg)
-    gears = {}
-    for pg in possible_gears:
-        gears[pg] = set()
-        for check in checks:
-            Y = pg[0] + check[0]
-            X = pg[1] + check[1]
-            if data[Y][X].isdecimal():
-                gears[pg].add(get_position(data, (Y, X)))
-    gears = {gear: gears[gear] for gear in gears if len(gears[gear]) == 2}
-    ratios = [
-        mul([int(data[y][s:e]) for (y, s, e) in list(pos)])
-        for pos in gears.values()
-    ]
+            parts = set()
+            for check in checks:
+                y = pg[0] + check[0]
+                x = pg[1] + check[1]
+                if data[y][x].isdecimal():
+                    parts.add(get_position(data, (y, x)))
+            if len(parts) == 2:
+                gears[pg] = product([int(data[y][s:e]) for (y, s, e) in parts])
+    # print(gears)
+    ratios = gears.values()
     print(ratios, sum(ratios))
 
 
-def mul(numbers) -> int:
-    res = 1
-    for n in numbers:
+def product(numbers) -> int:
+    res = numbers[0]
+    for n in numbers[1:]:
         res *= n
     return res
+
 
 if __name__ == '__main__':
     file = 'demo.txt'
