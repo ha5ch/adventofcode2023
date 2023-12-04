@@ -38,9 +38,8 @@ def part2(data: list[str]):
     # print(cards)
     copies = [1] * len(winning_numbers)
     for i, points in enumerate(cards):
-        for _ in range(copies[i]):
-            for j in range(1, points+1):
-                copies[i+j] += 1
+            for j in range(i+1, points+i+1):
+                copies[j] += copies[i]
 
     print(copies, sum(copies))
 
