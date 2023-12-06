@@ -25,9 +25,12 @@ def part1(data: list[str]):
         result *= wins if wins > 0 else 1
     print(result)
 
+
 def part2(data: list[str]):
-    time = int(''.join([x.strip() for x in data[0].split(':')[1].strip().split()]))
-    distance = int(''.join([x.strip() for x in data[1].split(':')[1].strip().split()]))
+    time = int(''.join([x.strip()
+               for x in data[0].split(':')[1].strip().split()]))
+    distance = int(''.join([x.strip()
+                   for x in data[1].split(':')[1].strip().split()]))
     print(time, distance)
     # wins = 0
     # for press in range(1, time//2):
@@ -41,12 +44,8 @@ def part2(data: list[str]):
         if distance < press * (time - press):
             min = press
             break
-    max = 0
-    for press in range(time-min, -1, -1):
-        if distance < press * (time - press):
-            max = press
-            break
-    print(max, min, max-min +1)
+    print(min, time-min*2 + 1)
+
 
 if __name__ == '__main__':
     file = 'demo.txt'
