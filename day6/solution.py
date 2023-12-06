@@ -10,8 +10,9 @@ def get_data(file: str) -> list[str]:
 
 
 def part1(data: list[str]):
-    times = [int(x.strip()) for x in data[0].split(':')[1].strip().split()]
-    distances = [int(x.strip()) for x in data[1].split(':')[1].strip().split()]
+    times, distances = [[int(x.strip())
+                         for x in line.split(":")[1].strip().split()
+                         ] for line in data]
     print(times, distances)
 
     # distance = press * remaining
@@ -27,11 +28,11 @@ def part1(data: list[str]):
 
 
 def part2(data: list[str]):
-    time = int(''.join([x.strip()
-               for x in data[0].split(':')[1].strip().split()]))
-    distance = int(''.join([x.strip()
-                   for x in data[1].split(':')[1].strip().split()]))
+    time, distance = [int(''.join([x.strip()
+                                   for x in line.split(':')[1].strip().split()
+                                   ])) for line in data]
     print(time, distance)
+
     # wins = 0
     # for press in range(1, time//2):
     #     possible_distance = press * (time - press)
@@ -44,7 +45,7 @@ def part2(data: list[str]):
         if distance < press * (time - press):
             min = press
             break
-    print(min, time-min*2 + 1)
+    print(min, time - min * 2 + 1)
 
 
 if __name__ == '__main__':
