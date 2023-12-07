@@ -55,7 +55,7 @@ def memory_guzzler(data: list[str]):
 
 def part1(data: list[str]):
     seeds = [int(x) for x in data[0].split(": ")[1].split(" ")]
-    # print(seeds)
+    print(seeds)
     maps = {}
     category = ""
     for i in range(2, len(data)):
@@ -74,12 +74,70 @@ def part1(data: list[str]):
                 if source <= val <= source+length:
                     results[i] = (dest - source + val)
                     break
+        print(results)
     print(results, min(results))
 
 
 def part2(data: list[str]):
-    ...
+    seeds = [int(x) for x in data[0].split(": ")[1].split(" ")]
+    print(seeds)
 
+    maps = {}
+    category = ""
+    for i in range(2, len(data)):
+        if len(data[i]) == 0:
+            continue
+        if data[i].endswith(":"):
+            category = data[i].split(" ")[0]
+            maps[category] = []
+        else:
+            maps[category].append([int(x) for x in data[i].split(" ")])
+
+
+    # ???????
+
+    # print(maps)
+    
+    # mins = set()
+    # nums = []
+    # smallest = seeds[0]
+
+    # sts = maps['seed-to-soil']
+
+    # for i in range(0, len(seeds), 2):
+    #     n, m = seeds[i:i+2]
+    #     print(n, m, list(range(n, n+m)), sts)
+    #     for map in sts:
+    #         if map[1] <= n <= map[1]+map[2]:
+    #             n += map[0] + map[2]
+    #     print(n, m)
+
+
+    # for i in range(0, len(seeds), 2):
+    #     #print(*seeds[i:i+2])
+    #     n, m = seeds[i:i+2]
+    #     for j, val in enumerate(range(n, n+m)):
+    #         # nums.append(val)
+    #         for name, rng in maps.items():
+    #             print(name, rng)
+    #             s = sorted(rng, key=lambda x: x[1])
+    #             min_source = s[0][1]
+    #             max_source = s[-1][1] + s[-1][2]
+    #             if not (min_source <= val <= max_source):
+    #                 continue
+    #             for dest, source, length in rng:
+    #                 if source <= val <= source+length:
+    #                     val = (dest - source + val)
+    #                     break
+    #         #print(smallest, val, "\n")
+    #         if val < smallest:
+    #             smallest = val
+    #     print(smallest)
+
+    # print(smallest)
+    # mins = sorted(set(mins))
+    # print(sorted(nums))
+    # print(mins, min(mins))
 
 if __name__ == '__main__':
     file = 'demo.txt'
